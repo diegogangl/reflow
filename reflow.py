@@ -23,6 +23,14 @@ import bpy.props as prop
 import re
 
 
+def render_button(self, context):
+    """ Op Button for dimensions panel """
+
+    row = self.layout.row()
+    row.operator("keys.reflow")
+    
+
+
 class KS_OT_Reflow(bpy.types.Operator):
     bl_idname = "keys.reflow"
     bl_label = "Reflow"

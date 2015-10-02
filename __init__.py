@@ -51,7 +51,9 @@ def register():
     except: traceback.print_exc()
     
     print("Registered {} with {} modules".format(bl_info["name"], len(modules)))
-
+    
+    bpy.types.RENDER_PT_dimensions.append(reflow.render_button)
+    
 def unregister():
     try: bpy.utils.unregister_module(__name__)
     except: traceback.print_exc()
