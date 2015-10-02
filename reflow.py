@@ -19,6 +19,7 @@ Created by Diego Gangl
 '''
 
 import bpy
+import bpy.props as prop
 import re
 
 class KS_OT_Reflow(bpy.types.Operator):
@@ -27,11 +28,29 @@ class KS_OT_Reflow(bpy.types.Operator):
     bl_description = "Recalculate animations for a different fps"
     bl_options = {"REGISTER", "UNDO"}
     
+
+    fps_source = prop.IntProperty(
+                                   name = "Source FPS",
+                                   min = 1,
+                                   default = self.default_source_fps,
+                                   description = "Original FPS to convert from"
+                                 )
+    
+
+    fps_dest = prop.IntProperty(
+                                 name = "Destination FPS",
+                                 min = 1,
+                                 default = 60,
+                                 description = "Final FPS to convert to"
+                               )
     
     @classmethod
     def poll(cls, context):
         return len(bpy.data.animations) > 0
 
+
+    def default_source_fps(self):
+        return bpy.context.scene.render.fps
     
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
@@ -58,21 +77,15 @@ class KS_OT_Reflow(bpy.types.Operator):
 
     
     def execute(self, context):
+
         render = context.scene.render
 
         actions = bpy.data.actions
         markers = context.scene.timeline_markers
         objects = bpy.data.objects
 
-        # Tomar fps actual
-        fps_source = 24
-
-        # Tomar fps destino
-        fps_dest  = 60
-
-
         # Tomar diff
-        self.diff = fps_source / fps_dest
+        self.diff = self.fps_source / self.fps_dest
 
         # Setear fps destino
         render.fps = fps_dest
