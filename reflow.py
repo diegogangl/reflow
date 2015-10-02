@@ -111,7 +111,32 @@ class KS_OT_Reflow(bpy.types.Operator):
         return context.window_manager.invoke_props_dialog(self)
     
 
-    
+    def draw(self, context):
+        """ Draw settings dialog """
+
+        self.layout.separator()
+        row = self.layout.row()
+        
+        row.prop(self, "fps_source")
+        row.label("", icon="FORWARD")
+        row.prop(self, "fps_dest")
+
+        self.layout.separator()
+        row = self.layout.row()
+        row.label("Settings", icon="SCRIPTWIN")
+
+        row = self.layout.row()
+        row.prop(self, "do_nla")
+        
+        row = self.layout.row()
+        row.prop(self, "do_markers")
+        
+        row = self.layout.row()
+        row.prop(self, "do_markers_name")
+        
+        self.layout.separator()
+
+
     def execute(self, context):
         """ Resample animation data """
 
