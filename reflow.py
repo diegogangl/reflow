@@ -45,12 +45,16 @@ class KS_OT_Reflow(bpy.types.Operator):
                                  description = "Final FPS to convert to"
                                )
     
+
     @classmethod
     def poll(cls, context):
         return len(bpy.data.actions) > 0
 
 
     def invoke(self, context, event):
+        """ Show settings dialog """
+        
+        # Set default FPS from current FPS
         self.fps_source = context.scene.render.fps
         
         return context.window_manager.invoke_props_dialog(self)
@@ -77,39 +81,46 @@ class KS_OT_Reflow(bpy.types.Operator):
 
     
     def execute(self, context):
+        """ Resample animation data """
 
+        # Init
+        # ---------------------------------------------------------------------
         render = context.scene.render
-
         actions = bpy.data.actions
         markers = context.scene.timeline_markers
         objects = bpy.data.objects
 
-        # Tomar diff
         self.diff = self.fps_source / self.fps_dest
 
-        # Setear fps destino
-        render.fps = fps_dest
+        if self.diff == 1:
+            self.report({"WARNING"},"Source and Destination FPS are the same.")
+            return {"CANCELLED"}
 
 
-        # Loopear por cada accion
+        # Set new FPS in scene properties
+        render.fps = self.fps_dest
+
+        
+        # Fix actions
+        # ---------------------------------------------------------------------
         for action in actions:
             for curve in action.fcurves:
                 self.keyframe_resample(curve)    
 
 
-
-        # Arreglar tracks NLA
-        # Los tracks van por objeto
+        # Fix NLA tracks
+        # ---------------------------------------------------------------------
         for obj in objects:
             if obj.animation_data and obj.animation_data.use_nla:
                 for track in obj.animation_data.nla_tracks:
                     self.fix_nla_length(track)
 
 
-        # Loopear cada marker
+        # Fix Markers
+        # ---------------------------------------------------------------------
         for mark in markers:
             if mark.frame != 0:
-                new_frame = mark.frame // diff
+                new_frame = mark.frame // self.diff
                 mark.frame = new_frame
 
                 regex = re.match('^F_[0-9]*$', mark.name)
@@ -117,8 +128,4 @@ class KS_OT_Reflow(bpy.types.Operator):
                 if regex:
                     mark.name = 'F_{0}'.format(new_frame)
 
-
-        
-
-        
         return {'FINISHED'}
