@@ -56,14 +56,14 @@ class KS_OT_Reflow(bpy.types.Operator):
                               )
     
     do_markers = prop.BoolProperty(
-                                   name = "Fix Markers",
+                                   name = "Change Markers",
                                    description = "Change markers' frames",
                                    default = True,
                                   )
     
 
     do_markers_name = prop.BoolProperty(
-                                        name = "Fix Marker Names",
+                                        name = "Change Marker Names",
                                         description = ("Try to change markers"
                                                        " default names"),
                                         default = True,
