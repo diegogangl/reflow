@@ -24,10 +24,10 @@ bl_info = {
     "author": "Diego Gangl",
     "version": (0, 1, 0),
     "blender": (2, 75, 0),
-    "location": "Properties",
+    "location": "Properties > Render",
     "warning": "This addon is still in development.",
     "wiki_url": "",
-    "category": "Object" }
+    "category": "Animation" }
     
     
 import bpy      
