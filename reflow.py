@@ -23,6 +23,10 @@ import bpy.props as prop
 import re
 
 
+# TODO: Agregar opcion para end frame de la scene
+# TODO: Detectar FPS de una movie en VSE
+# TODO: Cambiar speed automaticamente en VSE
+
 def render_button(self, context):
     """ Op Button for dimensions panel """
 
@@ -33,7 +37,7 @@ def render_button(self, context):
 
 class KS_OT_Reflow(bpy.types.Operator):
     bl_idname = "keys.reflow"
-    bl_label = "Reflow"
+    bl_label = "Change fps for animations"
     bl_description = "Recalculate animations for a different fps"
     bl_options = {"REGISTER", "UNDO"}
     
