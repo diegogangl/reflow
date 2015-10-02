@@ -22,6 +22,7 @@ import bpy
 import bpy.props as prop
 import re
 
+
 class KS_OT_Reflow(bpy.types.Operator):
     bl_idname = "keys.reflow"
     bl_label = "Reflow"
@@ -32,7 +33,7 @@ class KS_OT_Reflow(bpy.types.Operator):
     fps_source = prop.IntProperty(
                                    name = "Source FPS",
                                    min = 1,
-                                   default = self.default_source_fps,
+                                   default = 24,
                                    description = "Original FPS to convert from"
                                  )
     
@@ -49,10 +50,9 @@ class KS_OT_Reflow(bpy.types.Operator):
         return len(bpy.data.actions) > 0
 
 
-    def default_source_fps(self):
-        return bpy.context.scene.render.fps
-    
     def invoke(self, context, event):
+        self.fps_source = context.scene.render.fps
+        
         return context.window_manager.invoke_props_dialog(self)
 
 
