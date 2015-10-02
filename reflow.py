@@ -44,6 +44,27 @@ class KS_OT_Reflow(bpy.types.Operator):
                                  default = 60,
                                  description = "Final FPS to convert to"
                                )
+
+    do_nla = prop.BoolProperty(
+                                name = "Fix NLA Tracks",
+                                description = ("Change Start and End frames"
+                                               " For NLA Tracks"),
+                                default = True,
+                              )
+    
+    do_markers = prop.BoolProperty(
+                                   name = "Fix Markers",
+                                   description = "Change markers' frames",
+                                   default = True,
+                                  )
+    
+
+    do_markers_name = prop.BoolProperty(
+                                        name = "Fix Marker Names",
+                                        description = ("Try to change markers"
+                                                       " default names"),
+                                        default = True,
+                                       )
     
 
     @classmethod
@@ -110,22 +131,26 @@ class KS_OT_Reflow(bpy.types.Operator):
 
         # Fix NLA tracks
         # ---------------------------------------------------------------------
-        for obj in objects:
-            if obj.animation_data and obj.animation_data.use_nla:
-                for track in obj.animation_data.nla_tracks:
-                    self.fix_nla_length(track)
+        if self.do_nla:
+            for obj in objects:
+                if obj.animation_data and obj.animation_data.use_nla:
+                    for track in obj.animation_data.nla_tracks:
+                        self.fix_nla_length(track)
 
 
         # Fix Markers
         # ---------------------------------------------------------------------
-        for mark in markers:
-            if mark.frame != 0:
-                new_frame = mark.frame // self.diff
-                mark.frame = new_frame
+        if self.do_markers:
+            for mark in markers:
+                if mark.frame != 0:
+                    new_frame = mark.frame // self.diff
+                    mark.frame = new_frame
 
-                regex = re.match('^F_[0-9]*$', mark.name)
+                    if self.do_markers_name:
+                        regex = re.match('^F_[0-9]*$', mark.name)
 
-                if regex:
-                    mark.name = 'F_{0}'.format(new_frame)
+                        if regex:
+                            mark.name = 'F_{0}'.format(new_frame)
+
 
         return {'FINISHED'}
