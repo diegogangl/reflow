@@ -48,6 +48,12 @@ class KS_OT_Reflow(bpy.types.Operator):
                                  description = "Final FPS to convert to"
                                )
 
+    do_actions = prop.BoolProperty(
+                                    name = "Change actions",
+                                    description = "Move keyframes in actions",
+                                    default = True,
+                                  )
+    
     do_nla = prop.BoolProperty(
                                 name = "Fix NLA Tracks",
                                 description = ("Change Start and End frames"
@@ -57,7 +63,7 @@ class KS_OT_Reflow(bpy.types.Operator):
     
     do_markers = prop.BoolProperty(
                                    name = "Change Markers",
-                                   description = "Change markers' frames",
+                                   description = "Move markers' frames",
                                    default = True,
                                   )
     
@@ -90,6 +96,7 @@ class KS_OT_Reflow(bpy.types.Operator):
         for strip in track.strips:
             strip.action_frame_start //= self.diff
             strip.action_frame_end //= self.diff
+
 
 
 
@@ -129,6 +136,9 @@ class KS_OT_Reflow(bpy.types.Operator):
         row.prop(self, "do_nla")
         
         row = self.layout.row()
+        row.prop(self, "do_actions")
+        
+        row = self.layout.row()
         row.prop(self, "do_markers")
         
         row = self.layout.row()
@@ -160,9 +170,10 @@ class KS_OT_Reflow(bpy.types.Operator):
         
         # Fix actions
         # ---------------------------------------------------------------------
-        for action in actions:
-            for curve in action.fcurves:
-                self.keyframe_resample(curve)    
+        if self.do_actions:
+            for action in actions:
+                for curve in action.fcurves:
+                    self.keyframe_resample(curve)    
 
 
         # Fix NLA tracks
