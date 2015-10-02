@@ -46,7 +46,7 @@ class KS_OT_Reflow(bpy.types.Operator):
     
     @classmethod
     def poll(cls, context):
-        return len(bpy.data.animations) > 0
+        return len(bpy.data.actions) > 0
 
 
     def default_source_fps(self):
