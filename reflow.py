@@ -30,6 +30,9 @@ class KS_OT_Reflow(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
 
+    # Settings
+    # -------------------------------------------------------------------------
+
     fps_source = prop.IntProperty(
                                    name = "Source FPS",
                                    min = 1,
@@ -67,19 +70,8 @@ class KS_OT_Reflow(bpy.types.Operator):
                                        )
     
 
-    @classmethod
-    def poll(cls, context):
-        return len(bpy.data.actions) > 0
-
-
-    def invoke(self, context, event):
-        """ Show settings dialog """
-        
-        # Set default FPS from current FPS
-        self.fps_source = context.scene.render.fps
-        
-        return context.window_manager.invoke_props_dialog(self)
-
+    # Loop Methods
+    # -------------------------------------------------------------------------
 
     def keyframe_resample(self, curve):
         """ Resample every keyframe in a curve """
@@ -99,6 +91,25 @@ class KS_OT_Reflow(bpy.types.Operator):
             strip.action_frame_start //= self.diff
             strip.action_frame_end //= self.diff
 
+
+
+    # Main Methods
+    # -------------------------------------------------------------------------
+
+    @classmethod
+    def poll(cls, context):
+        return len(bpy.data.actions) > 0
+
+
+
+    def invoke(self, context, event):
+        """ Show settings dialog """
+        
+        # Set default FPS from current FPS
+        self.fps_source = context.scene.render.fps
+        
+        return context.window_manager.invoke_props_dialog(self)
+    
 
     
     def execute(self, context):
