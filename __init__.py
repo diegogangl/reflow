@@ -21,11 +21,10 @@ Created by Diego Gangl
 bl_info = {
     "name": "Keys Reflow",
     "description": "Recalculate keyframes for different fps",
-    "author": "Diego Gangl",
+    "author": "Diego Gangl <diego@sinestesia.co>",
     "version": (0, 1, 0),
     "blender": (2, 75, 0),
     "location": "Properties > Render",
-    "warning": "This addon is still in development.",
     "wiki_url": "",
     "category": "Animation" }
     
