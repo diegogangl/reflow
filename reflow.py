@@ -23,10 +23,6 @@ import bpy.props as prop
 import re
 
 
-# TODO: Agregar opcion para end frame de la scene
-# TODO: Detectar FPS de una movie en VSE
-# TODO: Cambiar speed automaticamente en VSE
-
 def render_button(self, context):
     """ Op Button for dimensions panel """
 
@@ -35,7 +31,7 @@ def render_button(self, context):
     
 
 
-class KS_OT_Reflow(bpy.types.Operator):
+class RF_OT_Reflow(bpy.types.Operator):
     bl_idname = "keys.reflow"
     bl_label = "Change fps for animations"
     bl_description = "Recalculate animations for a different fps"
@@ -86,7 +82,17 @@ class KS_OT_Reflow(bpy.types.Operator):
                                                        " default names"),
                                         default = True,
                                        )
+
     
+    do_fix_endframe = prop.BoolProperty(
+                                        name = "Change end frame",
+                                        description = ("Change scene's end" 
+                                                       " end frame"),
+                                        default = True,
+                                       )
+    
+
+
 
     # Loop Methods
     # -------------------------------------------------------------------------
@@ -156,7 +162,11 @@ class KS_OT_Reflow(bpy.types.Operator):
         row = self.layout.row()
         row.prop(self, "do_markers_name")
         
+        row = self.layout.row()
+        row.prop(self, "do_fix_endframe")
+
         self.layout.separator()
+
 
 
     def execute(self, context):
@@ -179,7 +189,13 @@ class KS_OT_Reflow(bpy.types.Operator):
         # Set new FPS in scene properties
         render.fps = self.fps_dest
 
-        
+
+        # Fix endframe
+        # ---------------------------------------------------------------------
+        if self.do_fix_endframe:
+            scene.frame_end = scene.frame_end // self.diff
+
+       
         # Fix actions
         # ---------------------------------------------------------------------
         if self.do_actions:
