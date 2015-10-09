@@ -1,5 +1,6 @@
 # Reflow
 
+![Reflow screenshot](screen.png)
 
 Reflow is Blender addon that lets you change the fps in a scene.
 Instead of using time remapping, Reflow changes the animation data.
